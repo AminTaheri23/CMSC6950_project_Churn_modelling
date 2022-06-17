@@ -48,7 +48,7 @@ class visualizer:
             dataset (pd.DataFrame): the desired dataframe
             rows (integer): number of rows for the plot
             cols (integer): number of columns for the plot
-            plot_type (string): you should choose between 'box', 'violin', 'point', 'bar'
+            plot_type (string): you should choose between 'box', 'violin'
             column_names (list of strings): list of columns to be plotted
             target_name (string): the name of the target column
         """        
@@ -64,12 +64,7 @@ class visualizer:
                 elif 'box' in plot_type:
                     sns.boxplot(
                         x=target_name, y=column_names[counter], data=dataset, ax=axes[i][j])
-                elif 'point' in plot_type:
-                    sns.pointplot(
-                        x=target_name, y=column_names[counter], data=dataset, ax=axes[i][j])
-                elif 'bar' in plot_type:
-                    sns.barplot(
-                        x=target_name, y=column_names[counter], data=dataset, ax=axes[i][j])
+               
 
                 counter += 1
                 if counter == (number_of_column-1,):
@@ -115,11 +110,11 @@ class outlier_handling():
         for i in range(len(df.columns) - 1):
             q1, q3 = np.percentile(df.iloc[:, i], [25, 75])
             iqr = q3 - q1
-            lower_bound = q1 - (iqr * 1.5)
-            upper_bound = q3 + (iqr * 1.5)
-            df.drop(df[df.iloc[:, i] < lower_bound].index, inplace=True)
+            lower_bound = q1 - (iqr * 1.5) # 1.5 times the IQR
+            upper_bound = q3 + (iqr * 1.5) # 1.5 times the IQR
+            df.drop(df[df.iloc[:, i] < lower_bound].index, inplace=True) 
             df.drop(df[df.iloc[:, i] > upper_bound].index, inplace=True)
-            print("Number of deleted data for outliers", dim1 - df.shape[0])
+        print("Number of deleted data for outliers", dim1 - df.shape[0]) # print the number of deleted data
         return df
 
 if __name__ == "__main__":
